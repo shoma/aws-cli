@@ -22,15 +22,15 @@ jobs:
             - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: python -m venv venv
       - run:
-        name: install dependencies
-        command: |
-          . venv/bin/activate
-          python scripts/ci/install
+          name: install dependencies
+          command: |
+            . venv/bin/activate
+            python scripts/ci/install
       - run:
         name:
-        command: |
-          . venv/bin/activate
-          python scripts/ci/run-tests
+          command: |
+            . venv/bin/activate
+            python scripts/ci/run-tests
 
   tests-36:
     <<: *base-test
