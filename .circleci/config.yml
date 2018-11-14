@@ -8,6 +8,6 @@ jobs:
     steps:
       - checkout
       - run: python scripts/ci/install
-      - run: python scripts/ci/run-test
+      - run: python scripts/ci/run-tests
 
 # vim: et sw=2 ts=2
