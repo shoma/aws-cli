@@ -27,7 +27,7 @@ jobs:
             . venv/bin/activate
             python scripts/ci/install
       - run:
-        name: run test
+          name: run test
           command: |
             . venv/bin/activate
             python scripts/ci/run-tests
