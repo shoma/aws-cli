@@ -1,0 +1,76 @@
+version: 2.1
+
+jobs:
+  checkoutcode:
+    docker:
+      - image: circleci/python
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
+
+  tests-37: &base-test
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: setup venv
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            python -m ensurepip
+            pip install --upgrade pip
+      - run:
+          name: install dependencies
+          command: |
+            . venv/bin/activate
+            python scripts/ci/install
+      - run:
+          name: run test
+          command: |
+            . venv/bin/activate
+            python scripts/ci/run-tests
+      - store_test_results:
+          path: ~/repo
+
+  tests-36:
+    <<: *base-test
+    docker:
+      - image: circleci/python:3.6
+
+  tests-35:
+    <<: *base-test
+    docker:
+      - image: circleci/python:3.5
+
+  tests-34:
+    <<: *base-test
+    docker:
+      - image: circleci/python:3.4
+
+workflows:
+  version: 2
+  tests-flow:
+    jobs:
+      - checkoutcode
+      - tests-37:
+          requires:
+            - checkoutcode
+      - tests-36:
+          requires:
+            - checkoutcode
+      - tests-35:
+          requires:
+            - checkoutcode
+      - tests-34:
+          requires:
+            - checkoutcode
+
+# vim: et sw=2 ts=2
