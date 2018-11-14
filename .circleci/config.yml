@@ -1,13 +1,66 @@
 version: 2.1
 
 jobs:
-  build:
+  checkoutcode:
     docker:
-      - image: python
+      - image: circleci/python
     working_directory: ~/repo
     steps:
       - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          path: ~/repo
+
+  tests-37: &base-test
+    docker:
+      - image: circle/python:3.7
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run: python scripts/ci/install
       - run: python scripts/ci/run-tests
+
+  tests-36:
+    <<: *base-test
+    docker:
+      - image: circle/python:3.6
+
+  tests-35:
+    <<: *base-test
+    docker:
+      - image: circle/python:3.5
+
+  tests-34:
+    <<: *base-test
+    docker:
+      - image: circle/python:3.4
+
+  tests-33:
+    <<: *base-test
+    docker:
+      - image: circle/python:3.3
+
+workflows:
+  version: 2
+  tests-flow:
+    jobs:
+      - checkoutcode
+      - tests-37:
+          requires:
+            - checkoutcode
+      - tests-36:
+          requires:
+            - checkoutcode
+      - tests-35:
+          requires:
+            - checkoutcode
+      - tests-34:
+          requires:
+            - checkoutcode
+      - tests-33:
+          requires:
+            - checkoutcode
 
 # vim: et sw=2 ts=2
