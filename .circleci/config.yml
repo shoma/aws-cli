@@ -25,6 +25,7 @@ jobs:
           command: |
             python -m venv venv
             . venv/bin/activate
+            python -m ensurepip
             pip install --upgrade pip
       - run:
           name: install dependencies
@@ -52,11 +53,6 @@ jobs:
     docker:
       - image: circleci/python:3.4
 
-  tests-33:
-    <<: *base-test
-    docker:
-      - image: circleci/python:3.3
-
 workflows:
   version: 2
   tests-flow:
@@ -72,9 +68,6 @@ workflows:
           requires:
             - checkoutcode
       - tests-34:
-          requires:
-            - checkoutcode
-      - tests-33:
           requires:
             - checkoutcode
 
