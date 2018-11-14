@@ -20,6 +20,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run: python -m venv vnev && source venv/activate
       - run: python scripts/ci/install
       - run: python scripts/ci/run-tests
 
