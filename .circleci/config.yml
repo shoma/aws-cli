@@ -9,7 +9,8 @@ jobs:
       - checkout
       - save_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-          path: ~/repo
+          paths:
+            - ~/repo
 
   tests-37: &base-test
     docker:
