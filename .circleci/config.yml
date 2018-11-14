@@ -37,6 +37,8 @@ jobs:
           command: |
             . venv/bin/activate
             python scripts/ci/run-tests
+      - store_test_results:
+          path: ~/repo
 
   tests-36:
     <<: *base-test
