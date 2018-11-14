@@ -20,7 +20,12 @@ jobs:
       - restore_cache:
           keys:
             - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: python -m venv venv
+      - run:
+          name: setup venv
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip
       - run:
           name: install dependencies
           command: |
