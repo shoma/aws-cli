@@ -26,19 +26,25 @@ jobs:
             python -m venv venv
             . venv/bin/activate
             python -m ensurepip
-            pip install --upgrade pip
+      - restore_cache:
+          keys:
+            - v1-venv-lib-{{ .ENVIRONMENT.CIRCLE_STAGE }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: |
             . venv/bin/activate
             python scripts/ci/install
+      - save_cache:
+          key: v1-venv-lib-{{ .ENVIRONMENT.CIRCLE_STAGE }}-{{ checksum "requirements.txt" }}
+          paths:
+            - ~/repo/venv/lib/python3.7/site-packages
       - run:
           name: run test
           command: |
             . venv/bin/activate
             python scripts/ci/run-tests
       - store_test_results:
-          path: ~/repo
+          path: ~/repo/tests
 
   tests-36:
     <<: *base-test
