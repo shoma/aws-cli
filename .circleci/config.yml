@@ -28,14 +28,14 @@ jobs:
             python -m ensurepip
       - restore_cache:
           keys:
-            - v1-venv-lib-{{ .ENVIRONMENT.CIRCLE_STAGE }}-{{ checksum "requirements.txt" }}
+            - v1-venv-lib-{{ .Environment.CIRCLE_STAGE }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: |
             . venv/bin/activate
             python scripts/ci/install
       - save_cache:
-          key: v1-venv-lib-{{ .ENVIRONMENT.CIRCLE_STAGE }}-{{ checksum "requirements.txt" }}
+          key: v1-venv-lib-{{ .Environment.CIRCLE_STAGE }}-{{ checksum "requirements.txt" }}
           paths:
             - ~/repo/venv/lib/python3.7/site-packages
       - run:
